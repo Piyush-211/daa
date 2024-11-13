@@ -1,0 +1,14 @@
+# Step 1: Copy the log to a temporary file
+sudo cp /var/log/syslog /tmp/syslog-temp
+
+# Step 2: Edit the temporary file with sed to delete entries from the last 24 hours
+sudo sed -i "/$(date +"%b %_d" -d "yesterday")/,\$d" /tmp/syslog-temp
+
+# Step 3: Overwrite the original file with the edited temporary file
+sudo mv /tmp/syslog-temp /var/log/syslog
+
+cat /var/log/syslog | grep -i networkmanager
+
+sudo truncate -s 0 /var/log/syslog  
+
+sudo systemctl restart NetworkManager
